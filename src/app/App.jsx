@@ -82,8 +82,8 @@ function Target() {
 function Side() {
   return (
     <aside className="practice-rail" aria-label="Letter and coaching details">
-      <Target />
       <Coach />
+      <Target />
       <details className="details-panel finger-panel">
         <summary><span>Finger-by-finger check</span><small>Live shape detail</small></summary>
         <div className="meters" id="meters" aria-label="Live finger checks" />

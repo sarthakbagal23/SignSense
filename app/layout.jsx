@@ -1,6 +1,7 @@
 import '../src/index.css';
 import '../src/landing/landing.css';
 import '../src/app/app-redesign.css';
+import '../src/app/app-polish.css';
 
 export const metadata = {
   title: 'SignSense: a coach for the first conversation',

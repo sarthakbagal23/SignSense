@@ -1,0 +1,98 @@
+/* Landing v3: the product is the hero. Loaded after landing.css, so these rules win where they overlap. */
+
+/* Kickers read as sentences, not tracked-out labels. */
+.landing-shell .story-kicker{font-size:14px;font-weight:600;letter-spacing:.005em;text-transform:none}
+.landing-shell .story-step{font-size:12px;letter-spacing:.04em}
+
+/* ---------- Hero ---------- */
+.hero3{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);align-items:center;gap:clamp(24px,4vw,72px);min-height:100svh;padding:calc(var(--story-nav-height) + 24px) var(--story-pad) 64px;overflow:hidden;background:#071112;color:var(--story-white)}
+.hero3::after{position:absolute;inset:auto 0 0;height:160px;z-index:-1;content:"";background:linear-gradient(0deg,#071112,transparent);pointer-events:none}
+.hero3-rays{position:absolute;inset:0;z-index:-2;opacity:.8;mask-image:linear-gradient(180deg,#000 40%,transparent 100%);-webkit-mask-image:linear-gradient(180deg,#000 40%,transparent 100%)}
+.hero3-rays .light-rays-container{height:100%}
+.hero3-copy{min-width:0}
+.hero3-title{margin:0;font-family:var(--story-display);font-weight:400;font-size:clamp(54px,6.6vw,108px);line-height:.98;letter-spacing:-.04em;text-wrap:balance}
+.hero3-title p{margin:0}
+.hero3-line-2{color:var(--story-accent);font-style:italic}
+.hero3-sub{max-width:43ch;margin:30px 0 38px;color:rgba(248,251,248,.78);font-size:clamp(17px,1.5vw,20px);line-height:1.55}
+.hero3-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 26px}
+.hero3-secondary{display:inline-flex;align-items:center;gap:9px;min-height:44px;color:#c3d3d8;font-size:15px;font-weight:600;text-decoration:none}
+.hero3-secondary svg{transition:transform .2s ease}
+.hero3-secondary:hover svg{transform:translateY(3px)}
+.hero3-stage{position:relative;min-width:0}
+.hero3-glyph,.story3-glyph{position:absolute;left:2%;top:2%;z-index:0;font:400 clamp(130px,15vw,230px)/.8 var(--story-display);letter-spacing:-.05em;color:rgba(248,251,248,.13);pointer-events:none;user-select:none;animation:glyph-in .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes glyph-in{from{opacity:0;transform:translateY(14px) scale(.97);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.hero3-drill{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;margin:0;padding:0;list-style:none}
+.hero3-drill li{display:grid;place-items:center;min-width:44px;height:44px;border:1px solid rgba(248,251,248,.2);border-radius:8px;color:rgba(248,251,248,.7);font:500 20px var(--story-display);transition:border-color .3s,color .3s,background-color .3s}
+.hero3-drill li.is-on{border-color:var(--story-accent);background:rgba(95,212,224,.14);color:#fff}
+.hero3-drill .hero3-drill-note{min-width:0;height:auto;margin-left:8px;border:0;color:rgba(248,251,248,.6);font:400 14px var(--story-body)}
+
+/* ---------- Hand stage (shared by hero and story) ---------- */
+.hand-stage{position:relative;width:100%;aspect-ratio:1/1.05;max-height:calc(100svh - 190px)}
+.hand-stage canvas{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%}
+.hand-stage-rings{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hand-stage-rings i{position:absolute;left:50%;top:58%;aspect-ratio:1;border:1px solid rgba(95,212,224,.16);border-radius:50%;transform:translate(-50%,-50%);animation:ring-breathe 7s ease-in-out infinite}
+.hand-stage-rings i:nth-child(1){width:58%}
+.hand-stage-rings i:nth-child(2){width:86%;animation-delay:-2.3s;border-color:rgba(95,212,224,.1)}
+.hand-stage-rings i:nth-child(3){width:116%;animation-delay:-4.6s;border-color:rgba(95,212,224,.06)}
+@keyframes ring-breathe{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.04)}}
+.hand-chip{position:absolute;left:0;bottom:64px;z-index:3;display:flex;align-items:center;gap:10px;max-width:min(270px,72%);padding:11px 14px;border:1px solid rgba(240,185,90,.65);border-radius:10px;background:rgba(7,17,18,.88);color:#fff;font:500 14px/1.35 var(--story-body);pointer-events:none;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:border-color .3s,box-shadow .3s;will-change:transform}
+.hand-chip-dot{flex:none;width:9px;height:9px;border-radius:50%;background:#f0b95a}
+.hand-chip.is-ok{border-color:rgba(143,227,136,.7);box-shadow:0 0 28px rgba(143,227,136,.18)}
+.hand-chip.is-ok .hand-chip-dot{background:#8fe388}
+
+/* ---------- Cue ribbon ---------- */
+.cue-ribbon{padding:28px 0;overflow:hidden;background:#071112;border-block:1px solid rgba(248,251,248,.12)}
+.cue-ribbon>div{mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.ss-vel{overflow:hidden}
+.ss-vel-track{display:flex;width:max-content;white-space:nowrap;font:italic 400 clamp(26px,3vw,40px)/1.55 var(--story-display);letter-spacing:-.01em;color:rgba(248,251,248,.42)}
+.ss-vel-track span{flex:none}
+.cue-ribbon .ss-vel:nth-child(2) .ss-vel-track{color:rgba(95,212,224,.46)}
+
+/* ---------- Story: scroll chooses the handshape ---------- */
+.story3{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#071112;color:var(--story-white)}
+.story3-copy{display:flex;min-width:0;flex-direction:column}
+.story3-beat{justify-content:center;min-height:92svh;padding:clamp(72px,10vh,120px) var(--story-pad);border:0!important;background:transparent!important;color:var(--story-white)}
+.story3-beat:not(.story-beat-first){padding-left:var(--story-pad)}
+.story3-beat .story-kicker{color:var(--story-accent)}
+.story3-beat .story-headline{max-width:none;color:var(--story-white);font-size:clamp(40px,4.3vw,66px);line-height:1.02}
+.story3-frame .hand-chip{left:22px;bottom:22px;max-width:min(400px,calc(100% - 44px))}
+.story3-beat .story-headline em{color:var(--story-accent)}
+.story3-beat .story-body{max-width:40ch;color:rgba(248,251,248,.8);font-size:clamp(16px,1.35vw,19px)}
+.story3-beat:not(.is-current) .story-headline{color:rgba(248,251,248,.55)}
+.story3-beat .story-headline{transition:color .5s ease}
+.story3-visual{position:sticky;top:var(--story-nav-height);align-self:start;display:flex;flex-direction:column;gap:12px;height:calc(100svh - var(--story-nav-height));min-width:0;margin:0;padding:clamp(16px,3vw,40px) var(--story-pad) clamp(16px,3vw,32px) 0}
+.story3-frame{position:relative;flex:1;min-height:0;overflow:hidden;border:1px solid rgba(248,251,248,.16);border-radius:12px;background:radial-gradient(ellipse at 50% 85%,rgba(95,212,224,.13),transparent 62%),#0a1618}
+.story3-frame .hand-stage{position:absolute;inset:0;height:100%;max-height:none;aspect-ratio:auto}
+.story3-visual figcaption{display:flex;justify-content:space-between;gap:16px;padding-top:12px;border-top:1px solid rgba(248,251,248,.2);color:rgba(248,251,248,.7);font:500 14px var(--story-body)}
+
+/* ---------- Product preview: larger type, no tracked micro-labels ---------- */
+.landing-shell .practice-intro h2{max-width:14ch;font-family:var(--story-display);font-weight:400;font-size:clamp(46px,6.2vw,92px);line-height:.98;letter-spacing:-.04em}
+.demo-window-bar{font-size:14px;letter-spacing:0}
+.demo-live-state{font-size:13px;letter-spacing:.01em;text-transform:none}
+.demo-window-foot{font-size:13px}
+.demo-window-foot b{font-size:15px}
+.demo-window-foot a{display:flex;align-items:center;gap:6px;min-height:44px;color:var(--story-white);font-weight:600;text-decoration:none}
+.demo-window-foot a:hover{color:var(--story-accent)}
+.practice-rail-title,.preview-overline{letter-spacing:.02em;text-transform:none}
+
+/* ---------- Responsive ---------- */
+@media(max-width:940px){
+  .hero3{grid-template-columns:1fr;align-content:center;gap:28px;padding-bottom:48px}
+  .hero3-stage{max-width:520px;width:100%;margin:0 auto}
+  .hand-stage{max-height:62svh}
+  .story3{display:flex;flex-direction:column}
+  .story3-visual{order:-1;z-index:2;align-self:stretch;width:100%;height:44svh;padding:12px var(--story-pad) 10px;background:#071112}
+  .story3-beat{min-height:62svh;padding-block:48px}
+}
+@media(max-width:620px){
+  .hero3{padding-inline:22px;padding-top:calc(var(--story-nav-height) + 28px)}
+  .hero3-title{font-size:clamp(46px,13vw,64px)}
+  .hero3-drill .hero3-drill-note{display:none}
+  .story3-visual{padding-inline:22px;height:40svh}
+  .story3-beat{padding-inline:24px}
+  .story3-glyph{font-size:110px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hand-stage-rings i,.hero3-glyph,.story3-glyph{animation:none!important}
+  .ss-vel-track{transform:none!important}
+}

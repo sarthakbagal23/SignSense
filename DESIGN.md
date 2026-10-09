@@ -71,3 +71,10 @@ Breakpoints: 920px for practice rail stacking/tablet navigation, 600px for story
 
 ## 9. Agent prompt guide
 Use the existing React, Tailwind v4, CSS tokens, Button, and Lucide icon family. Use 21st.dev’s Editorial Image Hero metadata as composition inspiration, adapted to a full-bleed story image rather than copied. For every change check hierarchy, touch size, focus, 390/768/1280/1440 widths, and reduced motion. No new UI dependencies for basic controls. Reject repeated card grids, decorative gradients, fake proof, and vague CTA text.
+
+## 10. Landing v3: the product is the hero
+Changes on the `frontend-glow-up` branch. The first viewport now shows SignSense itself: the app's own parametric hand model (`src/pose.js`) drawn as a live 21-landmark skeleton that morphs I, L, Y (the family drill) with the same cue language the coach uses, amber while a shape is still moving into place and green once it matches. The story section replaces the hotlinked stock photographs with the same hand, scrubbed by scroll through A, S, L, so the page demonstrates the product instead of describing it.
+- Components: React Bits `BlurText`, `Magnet`, `ShinyText`, `ScrollVelocity`, `LightRays` live in `src/components/fx/rb/` (MIT + Commons Clause, used inside the application); `HandStage` is ours.
+- Motion budget: one orchestrated hero moment (headline blur-in, light rays, hand loop), one scroll-linked effect (handshape follows scroll), one ribbon of real coaching lines. Reduced motion renders a still handshape and skips WebGL rays.
+- Type: kickers are sentence case, minimum 12px; practice screen small type raised from 9-11px; the coach cue is the largest text in the rail and its border follows status.
+- The practice preview embeds `/practice?embed=1`, which hides the app header so it is not a window inside a window.

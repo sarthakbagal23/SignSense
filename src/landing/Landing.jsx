@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion, useInView } from 'motion/react';
+import { MotionConfig, useInView } from 'motion/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -10,20 +10,23 @@ import { ArrowDown, ArrowRight, Check, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card } from '@/components/ui/card.jsx';
 import { spotlight } from '@/fx.js';
+import HandStage from './HandStage.jsx';
+import BlurText from '@/components/fx/rb/BlurText.jsx';
+import Magnet from '@/components/fx/rb/Magnet.jsx';
+import ShinyText from '@/components/fx/rb/ShinyText.jsx';
+import LightRays from '@/components/fx/rb/LightRays.jsx';
+import { ScrollVelocity } from '@/components/fx/rb/ScrollVelocity.jsx';
+import './landing-v3.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const familyPhoto = 'https://images.unsplash.com/photo-1576089073624-b5751a8f4de9?auto=format&fit=crop&w=2400&h=1800&q=85';
-const scenePhotos = [
-  { src: familyPhoto, alt: 'A family gathered around a dinner table', note: 'A story, waiting to be shared.' },
-  { src: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1800&h=2200&q=85', alt: 'A group of people sitting together at sunset', note: 'Understanding grows both ways.' },
-  { src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&h=2200&q=85', alt: 'Friends exploring together in Paris', note: 'Start small. Keep showing up.' },
-];
+const HERO_LETTERS = ['I', 'L', 'Y'];
+const STORY_LETTERS = ['A', 'S', 'L'];
 
 const beats = [
   {
     kicker: 'Imagine you’re ten.',
-    title: <><span className="story-line">Dinner is loud.</span><span className="story-line">You have a story.</span><span className="story-line"><em>Your family is still learning your language.</em></span></>,
+    title: <><span className="story-line">Your family is</span><span className="story-line"><em>still learning</em></span><span className="story-line">your language.</span></>,
     body: 'Everyone you love is at the table. You already know what you want to say. They are learning how to follow your hands.',
     first: true,
   },
@@ -37,6 +40,20 @@ const beats = [
     title: <><span className="story-line">A small practice</span><span className="story-line">can open a door.</span></>,
     body: 'SignSense gives hearing family members a place to learn fingerspelling between lessons, with a clear cue for the handshape in front of them.',
   },
+];
+
+// Real coaching lines from the practice engine (src/letters.js), so the ribbon is the product's own voice.
+const CUE_LINES = [
+  'Rest your thumb along the side of your index finger.',
+  'Touch your thumb tip to your index fingertip to close the circle.',
+  'Stick your thumb out to the side, making an L.',
+  'Spread your index and middle fingers apart into a V.',
+];
+const CUE_LINES_2 = [
+  'Wrap your thumb across the front of your curled fingers.',
+  'Fan your three fingers apart.',
+  'Bend your index finger into a hook.',
+  'Curl your index finger down to meet your thumb.',
 ];
 
 function Header() {
@@ -53,6 +70,49 @@ function Header() {
   );
 }
 
+function Hero({ reduced }) {
+  const [glyph, setGlyph] = useState({ letter: HERO_LETTERS[0], settled: false });
+  const onLetter = useCallback((letter, settled) => setGlyph({ letter, settled }), []);
+  return (
+    <section className="hero3" aria-labelledby="hero-title">
+      {!reduced && <div className="hero3-rays" aria-hidden="true"><LightRays raysOrigin="top-center" raysColor="#5fd4e0" raysSpeed={0.7} lightSpread={0.85} rayLength={1.5} followMouse mouseInfluence={0.05} noiseAmount={0.07} fadeDistance={1.05} saturation={0.9} /></div>}
+      <div className="hero3-copy">
+        <div role="heading" aria-level={1} id="hero-title" className="hero3-title" aria-label="Dinner is loud. You have a story.">
+          <MotionConfig reducedMotion="user">
+            <span aria-hidden="true"><BlurText text="Dinner is loud." delay={110} animateBy="words" direction="bottom" className="hero3-line" /></span>
+            <span aria-hidden="true"><BlurText text="You have a story." delay={110} animateBy="words" direction="bottom" className="hero3-line hero3-line-2" /></span>
+          </MotionConfig>
+        </div>
+        <p className="hero3-sub">Your family is still learning your language. SignSense watches your hand through the camera and tells you the one thing to adjust next.</p>
+        <div className="hero3-actions">
+          <Magnet padding={70} magnetStrength={3}>
+            <Button as={Link} href="/practice?welcome=1" variant="default" size="lg" className="story-primary">Try a practice round <ArrowRight size={18} aria-hidden="true" /></Button>
+          </Magnet>
+          <a className="hero3-secondary" href="#story"><ShinyText text="Read the story" color="#c3d3d8" shineColor="#ffffff" speed={3} delay={1.5} /><ArrowDown size={15} aria-hidden="true" /></a>
+        </div>
+      </div>
+      <div className="hero3-stage">
+        <HandStage letters={HERO_LETTERS} mode="auto" onLetter={onLetter} />
+        <div key={glyph.letter} className="hero3-glyph" aria-hidden="true">{glyph.letter}</div>
+        <ol className="hero3-drill" aria-label="Today’s family drill: I, L, Y">
+          {HERO_LETTERS.map((l) => <li key={l} className={l === glyph.letter ? 'is-on' : ''}>{l}</li>)}
+          <li className="hero3-drill-note">the I-L-Y family drill</li>
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+function CueRibbon() {
+  return (
+    <section className="cue-ribbon" aria-label="Examples of the coaching cues SignSense gives">
+      <div aria-hidden="true">
+        <ScrollVelocity texts={[CUE_LINES.join('  ·  '), CUE_LINES_2.join('  ·  ')]} velocity={34} numCopies={4} parallaxClassName="ss-vel" scrollerClassName="ss-vel-track" />
+      </div>
+    </section>
+  );
+}
+
 function StoryBeat({ beat, index, setActive }) {
   const ref = useRef(null);
   const inView = useInView(ref, { margin: '-38% 0px -38% 0px', once: false });
@@ -60,91 +120,53 @@ function StoryBeat({ beat, index, setActive }) {
     if (inView) setActive(index);
   }, [inView, index, setActive]);
 
-  const Heading = beat.first ? 'h1' : 'h2';
   return (
-    <article
-      ref={ref}
-      className={`story-beat${beat.first ? ' story-beat-first' : ''}${inView ? ' is-current' : ''}`}
-      aria-current={inView ? 'step' : undefined}
-    >
+    <article ref={ref} className={`story-beat story3-beat${inView ? ' is-current' : ''}`} aria-current={inView ? 'step' : undefined}>
       <p className="story-kicker"><span className="story-step">0{index + 1}</span>{beat.kicker}</p>
-      <Heading className="story-headline">{beat.title}</Heading>
+      <h2 className="story-headline">{beat.title}</h2>
       <p className="story-body">{beat.body}</p>
       {beat.first && <a className="story-continue" href="#practice">See how we can start <ArrowDown size={15} aria-hidden="true" /></a>}
     </article>
   );
 }
 
-function Story({ reduced }) {
+function Story() {
   const [active, setActive] = useState(0);
-  const setCurrent = useCallback((index) => setActive(index), []);
+  const [glyph, setGlyph] = useState(STORY_LETTERS[0]);
+  const setCurrent = useCallback((i) => setActive(i), []);
+  const onLetter = useCallback((letter) => setGlyph(letter), []);
   const root = useRef(null);
+  const progress = useRef(0);
 
   useGSAP(() => {
-    const beats = gsap.utils.toArray('.story-beat', root.current);
-    const firstLines = beats[0]?.querySelectorAll('.story-line');
     const media = gsap.matchMedia();
-
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      if (firstLines?.length) {
-        gsap.fromTo(firstLines,
-          { autoAlpha: 0, yPercent: 115 },
-          { autoAlpha: 1, yPercent: 0, duration: 1.05, delay: 0.64, stagger: 0.13, ease: 'power4.out',
-            scrollTrigger: { trigger: beats[0], start: 'top 78%', toggleActions: 'play none none reverse' } },
-        );
-      }
-
-      beats.slice(1).forEach((beat) => {
-        const copy = beat.querySelectorAll('.story-kicker, .story-headline, .story-body');
-        gsap.fromTo(copy,
-          { autoAlpha: 0.38, y: 36 },
-          { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out',
-            scrollTrigger: { trigger: beat, start: 'top 72%', end: 'center 46%', scrub: 0.65 } },
-        );
+      ScrollTrigger.create({ trigger: root.current, start: 'top 40%', end: 'bottom bottom', onUpdate: (self) => { progress.current = self.progress; } });
+      gsap.utils.toArray('.story3-beat', root.current).forEach((beat) => {
+        const copy = beat.querySelectorAll('.story-kicker, .story-headline, .story-body, .story-continue');
+        gsap.fromTo(copy, { autoAlpha: 0.2, y: 34 }, { autoAlpha: 1, y: 0, stagger: 0.07, ease: 'power3.out',
+          scrollTrigger: { trigger: beat, start: 'top 75%', end: 'top 35%', scrub: 0.6 } });
       });
-
-      const responsive = gsap.matchMedia();
-      responsive.add('(min-width: 621px)', () => {
-        const frame = root.current.querySelector('.story-photo-frame');
-        const photo = root.current.querySelector('.story-photo-frame img');
-        gsap.fromTo(frame,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 1.2, delay: 0.58, ease: 'power3.inOut',
-            scrollTrigger: { trigger: beats[0], start: 'top 78%', toggleActions: 'play none none reverse' } },
-        );
-        gsap.fromTo(photo,
-          { scale: 1.28, xPercent: 4, yPercent: 12 },
-          { scale: 1.02, xPercent: -2, yPercent: -10, ease: 'none',
-            scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom bottom', scrub: 0.7 } },
-        );
-      });
-
-      responsive.add('(max-width: 620px)', () => {
-        const photo = root.current.querySelector('.story-photo-frame img');
-        gsap.fromTo(photo,
-          { scale: 1.18, xPercent: 2, yPercent: 3 },
-          { scale: 1.04, xPercent: -1, yPercent: -2, ease: 'none',
-            scrollTrigger: { trigger: beats[0], start: 'top top', end: 'bottom top', scrub: 0.5 } },
-        );
-      });
-
-      return () => responsive.revert();
     });
     return () => media.revert();
   }, { scope: root });
 
+  // Reduced motion: no scroll scrubbing, so the handshape simply follows the current beat.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) progress.current = active / (STORY_LETTERS.length - 1);
+  }, [active]);
+
   return (
-    <section ref={root} id="story" className="scroll-story" aria-label="A family learning to communicate">
-      <div className="story-copy">
+    <section ref={root} id="story" className="story3" aria-label="A family learning to communicate">
+      <div className="story3-copy">
         {beats.map((beat, i) => <StoryBeat key={i} beat={beat} index={i} setActive={setCurrent} />)}
       </div>
-      <figure className={`story-visual story-visual-${active + 1}`}>
-        <motion.div className="story-photo-frame" initial={reduced ? false : { opacity: 0, scale: 1.025 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1] }}>
-          {scenePhotos.map((scene, i) => <img key={scene.src} className={i === active ? 'scene-photo scene-photo-active' : 'scene-photo'} src={scene.src} alt={i === active ? scene.alt : ''} aria-hidden={i !== active} width="1800" height="2200" fetchPriority={i === 0 ? 'high' : 'auto'} loading={i === 0 ? 'eager' : 'lazy'} />)}
-          <div className="scene-note" aria-hidden="true"><span className="scene-note-index">0{active + 1}</span><span>{scenePhotos[active].note}</span></div>
-        </motion.div>
-        <div className="story-index" aria-hidden="true"><span>0{active + 1}</span><i><b style={{ transform: `scaleY(${(active + 1) / 3})` }} /></i><span>03</span></div>
-        <figcaption><span>THE STORY · 0{active + 1} / 03</span><span aria-live="polite">{beats[active].kicker}</span></figcaption>
+      <figure className="story3-visual">
+        <div className="story3-frame">
+          <HandStage letters={STORY_LETTERS} mode="scrub" progressRef={progress} pointer={false} onLetter={onLetter} />
+          <div className="story3-glyph" aria-hidden="true">{glyph}</div>
+        </div>
+        <figcaption><span>Handshape {STORY_LETTERS.indexOf(glyph) + 1} of {STORY_LETTERS.length}</span><span>Scroll to change it</span></figcaption>
       </figure>
     </section>
   );
@@ -157,9 +179,9 @@ function PracticeDemo() {
   useGSAP(() => {
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.fromTo(frame.current, { autoAlpha: 0.25, y: 42, rotateY: 3 }, {
-        autoAlpha: 1, y: 0, rotateY: 0, ease: 'power3.out',
-        scrollTrigger: { trigger: frame.current, start: 'top 82%', end: 'center 58%', scrub: 0.7 },
+      gsap.fromTo(frame.current, { autoAlpha: 0.25, y: 42, rotateX: 6, scale: 0.97 }, {
+        autoAlpha: 1, y: 0, rotateX: 0, scale: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: frame.current, start: 'top 88%', end: 'center 58%', scrub: 0.7 },
       });
     });
     return () => media.revert();
@@ -175,11 +197,11 @@ function PracticeDemo() {
 
   return (
     <Card ref={frame} spot={false} className="practice-demo-card">
-      <div className="demo-window-bar"><div className="demo-window-brand"><img src="/mascot/wave-small.png" alt="" width="23" height="23" /><span>SignSense <i>/</i> Practice</span></div><span className="demo-live-state"><i aria-hidden="true" />{inView ? 'LIVE PREVIEW' : 'READY TO PREVIEW'}</span></div>
+      <div className="demo-window-bar"><div className="demo-window-brand"><img src="/mascot/wave-small.png" alt="" width="23" height="23" /><span>Practice round</span></div><span className="demo-live-state"><i aria-hidden="true" />{inView ? 'Live preview' : 'Ready to preview'}</span></div>
       <div className="practice-demo">
-        {inView && <iframe src="/practice?demo=1&nointro=1&muted=1" title="SignSense handshape practice demo" loading="eager" />}
+        {inView && <iframe src="/practice?demo=1&nointro=1&muted=1&embed=1" title="SignSense handshape practice demo" loading="eager" />}
       </div>
-      <div className="demo-window-foot"><span><b>21</b> hand points tracked on your device</span><span>Click to explore <ArrowRight size={14} aria-hidden="true" /></span></div>
+      <div className="demo-window-foot"><span><b>21</b> hand points tracked on your device</span><Link href="/practice?welcome=1">Open the full practice <ArrowRight size={14} aria-hidden="true" /></Link></div>
     </Card>
   );
 }
@@ -207,11 +229,11 @@ function Practice() {
   return (
     <section ref={root} id="practice" className="practice-section" aria-labelledby="practice-title">
       <header className="practice-intro">
-        <div><p className="story-kicker"><span className="story-step">THE PRACTICE</span>Small steps. Real connection.</p><h2 id="practice-title">Their hands can learn, too.</h2></div>
+        <div><p className="story-kicker"><span className="story-step">The practice</span>Small steps. Real connection.</p><h2 id="practice-title">See one shape. Fix one thing.</h2></div>
         <p className="practice-lede">One letter at a time. SignSense follows the handshape in front of you and offers one useful adjustment, then lets you try again.</p>
       </header>
+      <div className="practice-preview-wrap"><PracticeDemo /><p className="practice-demo-caption">Try the letter controls. The demo loads only while it’s on screen and stays muted.</p></div>
       <div className="practice-copy">
-        <p className="practice-rail-title">A round, at your pace</p>
         <ul className="practice-facts">
           <li><span className="fact-index">01</span><span><b>See the shape</b><small>Compare your hand to a clear target.</small></span></li>
           <li><span className="fact-index">02</span><span><b>Follow one cue</b><small>Adjust one thing, like thumb beside index.</small></span></li>
@@ -220,7 +242,6 @@ function Practice() {
         <Button as={Link} href="/practice?welcome=1" variant="default" size="lg" className="story-primary">Try a practice round <ArrowRight size={18} aria-hidden="true" /></Button>
         <p className="practice-privacy"><Shield size={15} aria-hidden="true" /> Camera tracking stays on this device.</p>
       </div>
-      <div className="practice-preview-wrap"><p className="preview-overline"><span>01</span> LIVE PRODUCT PREVIEW <span className="preview-overline-rule" /></p><PracticeDemo /><p className="practice-demo-caption">Try the letter controls. The demo loads only while it’s on screen and stays muted.</p></div>
     </section>
   );
 }
@@ -235,7 +256,7 @@ function PromiseSection() {
   return (
     <section id="promise" className="promise-section" aria-labelledby="promise-title">
       <div className="promise-heading">
-        <p className="story-kicker"><span className="story-step">A NOTE</span>What this is for</p>
+        <p className="story-kicker"><span className="story-step">A note</span>What this is for</p>
         <h2 id="promise-title">A place to practice.<br /><em>Not a substitute for people.</em></h2>
         <p>Fingerspelling is one small part of ASL. SignSense helps with the alphabet; learn the language and conversation from Deaf teachers and signers.</p>
       </div>
@@ -263,7 +284,9 @@ export default function Landing() {
       <a className="landing-skip" href="#main-content">Skip to content</a>
       <Header />
       <main id="main-content">
-        <Story reduced={prefersReduced} />
+        <Hero reduced={prefersReduced} />
+        <CueRibbon />
+        <Story />
         <Practice />
         <PromiseSection />
       </main>

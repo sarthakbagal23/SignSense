@@ -1,0 +1,37 @@
+/* Practice screen polish: the coach cue is the loudest thing, small type gets bigger, the next action is obvious. */
+
+/* Readable small type (was 9-11px) */
+.app-v2 .panel-kicker,.app-v2 .sequence-label{font-size:12px;letter-spacing:.08em}
+.app-v2 .stage-mode,.app-v2 .streak-label{min-height:32px;font-size:12px}
+.app-v2 .system-status .badge{font-size:11px}
+.app-v2 .goal-button,.app-v2 .quiet-button,.app-v2 .icon-label{font-size:13px}
+.app-v2 .details-panel>summary{min-height:52px;font-size:14px}
+.app-v2 .details-panel>summary small{font-size:12px}
+.app-v2 .target-tip,.app-v2 .desc{font-size:13px}
+.app-v2 .reading{font-size:12px}
+.app-v2 .detail-caption,.app-v2 .ai-note,.app-v2 .toggle small{font-size:12px}
+.app-v2 .privacy-tag{font-size:12px}
+
+/* The stage is the product: give it presence */
+.app-v2 .stage{border-color:#2f4a52;box-shadow:0 36px 90px -36px rgba(0,0,0,.75),inset 0 0 0 1px rgba(95,212,224,.06)}
+.placeholder-ring{animation:ss-ring 3.2s ease-in-out infinite}
+@keyframes ss-ring{0%,100%{box-shadow:0 0 0 0 rgba(95,212,224,.3)}50%{box-shadow:0 0 0 16px rgba(95,212,224,0)}}
+
+/* The one coaching cue */
+.app-v2 .coach-panel{padding:20px;border-width:1px;border-color:rgba(95,212,224,.4);border-radius:12px;background:linear-gradient(180deg,#12222b,#0e1b21);transition:border-color .35s ease,box-shadow .35s ease}
+.app-v2 .coach-panel[data-kind=ok]{border-color:rgba(143,227,136,.6);box-shadow:0 0 36px -10px rgba(143,227,136,.35)}
+.app-v2 .coach-panel[data-kind=fix]{border-color:rgba(240,185,90,.6);box-shadow:0 0 36px -12px rgba(240,185,90,.3)}
+.app-v2 .coach-message{min-height:2.7em;margin-top:16px;font-size:clamp(19px,1.6vw,22px);font-weight:600;line-height:1.3;letter-spacing:-.012em}
+.app-v2 .coach-actions .btn{min-height:40px;font-size:13px}
+.app-v2 .coach-state{width:30px;height:30px;font-size:20px}
+
+/* Next action: the camera button leads */
+.app-v2 .stage-actions #b-cam{min-height:52px;padding-inline:22px;border-color:var(--signal);background:var(--signal);color:#06181a;font-size:15px;animation:ss-call 2.8s ease-out infinite}
+.app-v2 .stage-actions #b-cam.on,.app-v2 .stage-actions #b-cam[aria-pressed=true]{animation:none;border-color:var(--line);background:var(--surface);color:var(--txt)}
+@keyframes ss-call{0%{box-shadow:0 0 0 0 rgba(95,212,224,.45)}70%,100%{box-shadow:0 0 0 14px rgba(95,212,224,0)}}
+
+/* Embedded in the landing page: hide the app's own header so the preview isn't a window inside a window */
+html[data-embed] .practice-header,html[data-embed] .privacy-tag{display:none}
+html[data-embed] #app.app-v2{gap:12px;padding-top:12px}
+
+@media(prefers-reduced-motion:reduce){.placeholder-ring,.app-v2 .stage-actions #b-cam{animation:none!important}}
