@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { motion, useInView } from 'motion/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -35,44 +35,9 @@ const beats = [
   },
 ];
 
-function StoryIntro({ onSkip }) {
-  const video = useRef(null);
-  useEffect(() => {
-    const clip = video.current;
-    const timer = window.setTimeout(onSkip, 3400);
-    const stopAtTwoSeconds = () => {
-      if (clip.currentTime < 2) return;
-      clip.currentTime = 2;
-      clip.pause();
-    };
-    clip.addEventListener('timeupdate', stopAtTwoSeconds);
-    clip.play().catch(() => {});
-    return () => {
-      window.clearTimeout(timer);
-      clip.removeEventListener('timeupdate', stopAtTwoSeconds);
-      clip.pause();
-    };
-  }, [onSkip]);
-
+function Header() {
   return (
-    <motion.div className="story-intro" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.42, ease: [0.25, 0.1, 0.25, 1] }} role="presentation">
-      <div className="story-intro-composition">
-        <div className="story-intro-film"><video ref={video} muted playsInline preload="auto" poster="/media/senso-intro-poster.jpg" aria-hidden="true"><source src="/media/senso-intro.mp4" type="video/mp4" /></video><span className="story-intro-film-edge" /></div>
-        <div className="story-intro-copy">
-          <p className="story-intro-brandline">SIGNSENSE <span>·</span> A FIRST HELLO</p>
-          <p className="story-intro-status" role="status" aria-live="polite">Getting your practice ready</p>
-          <p className="story-intro-subline">One clear cue is on its way.</p>
-          <div className="story-intro-progress" aria-hidden="true"><span /></div>
-        </div>
-      </div>
-      <button className="intro-skip" type="button" onClick={onSkip}>Skip intro</button>
-    </motion.div>
-  );
-}
-
-function Header({ inert = false }) {
-  return (
-    <header className="story-nav" inert={inert}>
+    <header className="story-nav">
       <a className="story-brand" href="#top" aria-label="SignSense home"><img src="/mascot/wave-small.png" alt="" width="28" height="28" /><span>SignSense</span></a>
       <nav aria-label="Main navigation">
         <a href="#story">The story</a>
@@ -281,27 +246,16 @@ function PromiseSection() {
 
 export default function Landing() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [intro, setIntro] = useState(!prefersReduced);
-  const finishIntro = useCallback(() => setIntro(false), []);
-
-  useEffect(() => {
-    if (!intro) return undefined;
-    const onKeyDown = (event) => { if (event.key === 'Escape') finishIntro(); };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [intro, finishIntro]);
-
   return (
     <div id="top" className="landing-shell">
-      <a className="landing-skip" href="#main-content" inert={intro}>Skip to content</a>
-      <Header inert={intro} />
-      <main id="main-content" inert={intro}>
+      <a className="landing-skip" href="#main-content">Skip to content</a>
+      <Header />
+      <main id="main-content">
         <Story reduced={prefersReduced} />
         <Practice />
         <PromiseSection />
       </main>
-      <footer className="story-footer" inert={intro}><a className="story-brand" href="#top"><img src="/mascot/wave-small.png" alt="" width="24" height="24" /><span>SignSense</span></a><span>On-device hand tracking · optional AI notes</span></footer>
-      <AnimatePresence>{intro && <StoryIntro key="story-intro" onSkip={finishIntro} />}</AnimatePresence>
+      <footer className="story-footer"><a className="story-brand" href="#top"><img src="/mascot/wave-small.png" alt="" width="24" height="24" /><span>SignSense</span></a><span>On-device hand tracking · optional AI notes</span></footer>
     </div>
   );
 }

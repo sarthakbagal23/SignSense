@@ -124,7 +124,7 @@ function Overlays() {
       <div id="start" className="overlay" hidden>
         <section className="start-card" role="dialog" aria-modal="true" aria-labelledby="start-title" aria-describedby="start-description">
           <div className="welcome-layout">
-            <div className="welcome-film"><video id="welcome-video" muted playsInline preload="metadata" poster="/media/senso-intro-poster.jpg" controls aria-label="Senso introduces your practice"><source src="/media/senso-intro.mp4" type="video/mp4" /></video><span className="film-caption">A quick hello from Senso</span></div>
+            <div className="welcome-film"><video id="welcome-video" muted playsInline preload="metadata" poster="/media/senso-intro-poster.jpg" aria-hidden="true"><source src="/media/senso-intro.mp4" type="video/mp4" /></video><span className="film-caption">A quick hello from Senso</span></div>
             <div className="welcome-copy"><p className="panel-kicker">A GOOD PLACE TO BEGIN</p>
               <h1 id="start-title">Practice one handshape.</h1>
               <p id="start-description">Your camera tracks 21 points on your hand, right in your browser. Senso gives one cue when a shape needs a small adjustment.</p>
@@ -143,7 +143,32 @@ function Overlays() {
       <div id="mastery-modal" className="overlay" hidden><section className="start-card wide" role="dialog" aria-modal="true" aria-labelledby="mastery-title"><p className="panel-kicker">YOUR PRACTICE</p><h2 id="mastery-title">Letter progress</h2><p>Clean successes per letter, saved in this browser only.</p><div id="mastery-grid" className="mastery-grid" /><Button id="mastery-close" variant="default">Close progress</Button></section></div>
       <div id="report-modal" className="overlay" hidden><section className="start-card wide" role="dialog" aria-modal="true" aria-labelledby="report-title"><p className="panel-kicker">SESSION RECAP</p><h2 id="report-title">Nice session</h2><div id="report-body" className="report-body" /><div className="start-actions"><Button id="report-share" variant="default">Copy practice summary</Button><Button id="report-close">Keep practicing</Button></div></section></div>
       <div id="help" className="overlay" hidden><section className="start-card help-card" role="dialog" aria-modal="true" aria-labelledby="help-title"><p className="panel-kicker">QUICK HELP</p><h2 id="help-title">Move through a round</h2><p><kbd>←</kbd><kbd>→</kbd> change letter · <kbd>1</kbd> letters · <kbd>2</kbd> word · <kbd>H</kbd> flip hand · <kbd>M</kbd> mute · <kbd>G</kbd> inspector · <kbd>Esc</kbd> close</p><p className="start-note">Today’s goal is 10 clean letters. Fingerspelling is one small part of ASL; learn the language from Deaf teachers.</p><Button id="help-close" variant="default">Back to practice</Button></section></div>
-      <div id="intro" className="intro" hidden aria-label="Loading SignSense"><div className="intro-composition"><div className="intro-film"><video id="intro-video" muted playsInline preload="auto" poster="/media/senso-intro-poster.jpg" aria-hidden="true"><source src="/media/senso-intro.mp4" type="video/mp4" /></video><span className="intro-film-edge" /></div><div className="intro-copy"><p className="intro-brandline">SIGNSENSE <span>·</span> PRACTICE STUDIO</p><KineticText id="intro-status" text="Getting your practice ready" /><p className="intro-subline">One clear cue is on its way.</p><div className="intro-progress" aria-hidden="true"><span /></div></div></div><Button id="intro-skip" size="sm" variant="ghost">Skip loading</Button></div>
+      <div id="intro" className="intro" hidden aria-label="Loading SignSense">
+        <div className="intro-mascot" aria-hidden="true">
+          <img src="/mascot/wave.png" alt="" />
+          <img src="/mascot/pointing.png" alt="" />
+          <img src="/mascot/excited.png" alt="" />
+        </div>
+        <div className="intro-composition">
+          <div className="intro-copy">
+            <p className="intro-brandline">SIGNSENSE <span>·</span> PRACTICE STUDIO</p>
+            <KineticText id="intro-status" text="Getting your practice ready" />
+            <div className="intro-capabilities" aria-label="What SignSense can do">
+              <div className="intro-capabilities-window" aria-hidden="true">
+                <div className="intro-capabilities-track">
+                  <span>SignSense can track your hand</span>
+                  <span>SignSense can give one clear cue</span>
+                  <span>SignSense can help you practice letters</span>
+                </div>
+              </div>
+            </div>
+            <p className="intro-subline">One clear cue is on its way.</p>
+            <p className="sr-only" role="status" aria-live="polite">Getting your practice ready. SignSense tracks your hand on-device, offers one clear cue at a time, and helps you practice letter by letter.</p>
+            <div className="intro-progress" aria-hidden="true"><span /></div>
+          </div>
+        </div>
+        <Button id="intro-skip" size="sm" variant="ghost">Skip loading</Button>
+      </div>
     </>
   );
 }

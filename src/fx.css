@@ -19,5 +19,6 @@
 .marquee-track{animation:marq var(--speed,38s) linear infinite}
 @keyframes marq{to{transform:translateX(calc(-50% - .375rem))}}
 .kinetic-ch{display:inline-block;animation:kin 1.4s ease-in-out infinite}
+.kinetic-word{display:inline-block;margin-inline-end:.24em;white-space:nowrap}
 @keyframes kin{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-5px);opacity:1}}
 @media (prefers-reduced-motion:reduce){.rays-beam,.marquee-track,.kinetic-ch{animation:none}}

@@ -17,7 +17,7 @@ const el = Object.fromEntries([
   'stage', 'stage-placeholder', 'video', 'hud', 'fx', 'view3d', 'ghost', 'radar', 'glyph', 'desc', 'gauge', 'gaugev',
   'coach', 'coach-ico', 'coach-msg', 'reading', 'meters', 'word', 'pop', 'streak', 'modepill',
   'tol', 'tolv', 'custom', 'custom-start', 'custom-word', 'debug-output', 'dbgcard', 'start', 'start-note', 'help', 'b-offline', 'b-fps',
-  'b-track', 'ai-btn', 'ai-sum', 'ai-out', 'ai-name', 'ai-letter', 'family', 'go-family', 'go-family2', 'b-goal', 'c-why', 'c-simple', 'c-speak', 'coach-ai', 'diag', 'diag-title', 'diag-hint', 'retry-cam', 'pick-model-wrap', 'model-file', 'model-link', 'intro', 'intro-video', 'intro-skip', 'intro-status', 'welcome-video', 'b-snd', 'b-cam', 'b-flip', 'b-dbg', 'b-help', 'go-cam', 'help-close'
+  'b-track', 'ai-btn', 'ai-sum', 'ai-out', 'ai-name', 'ai-letter', 'family', 'go-family', 'go-family2', 'b-goal', 'c-why', 'c-simple', 'c-speak', 'coach-ai', 'diag', 'diag-title', 'diag-hint', 'retry-cam', 'pick-model-wrap', 'model-file', 'model-link', 'intro', 'intro-skip', 'intro-status', 'welcome-video', 'b-snd', 'b-cam', 'b-flip', 'b-dbg', 'b-help', 'go-cam', 'help-close'
 ].map((k) => [k, $(k)]));
 
 const WORDS = ['BOLD', 'CLOUD', 'SOLID', 'VISUAL', 'WILD', 'BASIC', 'DAILY', 'LOUD'];
@@ -471,11 +471,12 @@ requestAnimationFrame(frame);
 
 function finishIntro() {
   const i = el.intro; if (i.hidden) return;
-  const loader = el['intro-video']; loader.pause();
   try { sessionStorage.setItem('ss:intro', '1'); } catch {}
   i.classList.add('out'); el.start.hidden = !!qs.get('demo');
-  if (!el.start.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) el['welcome-video'].play().catch(() => {});
-  setTimeout(() => { i.hidden = true; i.classList.remove('out'); }, 520);
+  setTimeout(() => {
+    i.hidden = true; i.classList.remove('out');
+    if (!el.start.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) el['welcome-video'].play().catch(() => {});
+  }, 520);
 }
 if (qs.get('demo')) { useDemo(); }
 else {
@@ -486,14 +487,11 @@ else {
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) el['welcome-video'].play().catch(() => {});
   }
   else {
-    el.intro.hidden = false; const v = el['intro-video'];
+    el.intro.hidden = false;
     let settled = false;
     const complete = () => { if (settled) return; settled = true; finishIntro(); };
     el['intro-skip'].onclick = complete;
-    v.ontimeupdate = () => { if (v.currentTime >= 2) { v.currentTime = 2; v.pause(); complete(); } };
-    v.onerror = complete;
-    setTimeout(complete, 3400);
-    v.play().catch(complete);
+    setTimeout(complete, 6000);
   }
   if (!env.ok) { el['start-note'].textContent = env.hint; }
 }
