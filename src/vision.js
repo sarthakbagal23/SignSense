@@ -3,7 +3,7 @@
 // falling back to demo mode. Model order: file you picked -> /mediapipe (bundled) -> CDN.
 import { FilesetResolver, HandLandmarker } from '@mediapipe/tasks-vision';
 
-const BASE = import.meta.env.BASE_URL || '/';
+const BASE = '/';
 const LOCAL_WASM = `${BASE}mediapipe/wasm`;
 const LOCAL_MODEL = `${BASE}mediapipe/hand_landmarker.task`;
 const CDN_WASM = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm';

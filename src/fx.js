@@ -54,10 +54,12 @@ export function aurora(host, { stops = ['#5fd4e0', '#6a5cff', '#5fd4e0'], amplit
 
 // Spotlight Card: any element with .spot follows the pointer with a soft radial highlight (CSS reads --mx/--my).
 export function spotlight(root = document) {
-  root.addEventListener('pointermove', (e) => {
+  const onPointerMove = (e) => {
     const c = e.target.closest?.('.spot'); if (!c) return; const r = c.getBoundingClientRect();
     c.style.setProperty('--mx', `${e.clientX - r.left}px`); c.style.setProperty('--my', `${e.clientY - r.top}px`);
-  }, { passive: true });
+  };
+  root.addEventListener('pointermove', onPointerMove, { passive: true });
+  return () => root.removeEventListener('pointermove', onPointerMove);
 }
 
 // Magnet: element leans toward the cursor.

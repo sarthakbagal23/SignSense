@@ -1,7 +1,3 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "headers": [{ "source": "/(.*)", "headers": [
-    { "key": "Permissions-Policy", "value": "camera=(self)" },
-    { "key": "X-Content-Type-Options", "value": "nosniff" } ] }]
+  "buildCommand": "npm run build"
 }

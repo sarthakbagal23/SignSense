@@ -1,4 +1,4 @@
-// Serverless proxy for the optional Senso AI features (Vercel Node function, also mounted by vite dev).
+// Server handler for the optional Senso AI features.
 // The Groq key lives ONLY in the GROQ_API_KEY environment variable and is never sent to the browser.
 // Model: qwen/qwen3.8-27b (Groq's documented vision model). Override with GROQ_MODEL.
 

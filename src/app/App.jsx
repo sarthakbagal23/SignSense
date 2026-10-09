@@ -1,15 +1,17 @@
+'use client';
+
+import Link from 'next/link';
 import { ArrowRight, Camera, Check, CircleHelp, FlipHorizontal2, RotateCcw, ScanSearch, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button.jsx';
 import { Card } from '@/components/ui/card.jsx';
 import { KineticText } from '@/components/fx/KineticText.jsx';
-import './app-redesign.css';
 
 const status = ['b-offline', 'b-track', 'b-fps'];
 
 function Header() {
   return (
     <header className="practice-header">
-      <a className="practice-brand" href="index.html" aria-label="SignSense home"><img src="/mascot/wave-small.png" alt="" width="30" height="30" /><span>SignSense</span></a>
+      <Link className="practice-brand" href="/" aria-label="SignSense home"><img src="/mascot/wave-small.png" alt="" width="30" height="30" /><span>SignSense</span></Link>
       <nav className="tabs" aria-label="Practice mode">
         <button data-mode="practice" className="on" aria-pressed="true">Learn letters</button>
         <button data-mode="spell" aria-pressed="false">Spell a word</button>
