@@ -1,0 +1,21 @@
+@import "tailwindcss";
+/* Legacy styles for imperatively generated nodes (chips, meters, canvas HUD). Lives in the components layer so Tailwind utilities win. */
+@import "./fx.css" layer(components);
+@import "./style.css" layer(components);
+
+@theme {
+  --color-canvas: #080d12;
+  --color-surface: #101820;
+  --color-surface2: #17232d;
+  --color-hair: #263642;
+  --color-hair2: #344653;
+  --color-ink: #e8eef5;
+  --color-mute: #c3cfdc;
+  --color-sub: #93a4b4;
+  --color-signal: #5fd4e0;
+  --color-violet: #a58bff;
+  --font-sans: "Inter Tight", system-ui, sans-serif;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@layer base { html{scroll-behavior:smooth;color-scheme:dark} @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}} }

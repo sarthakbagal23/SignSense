@@ -1,0 +1,23 @@
+/* shared effect styles: spotlight, shiny text, aurora host */
+.spot{position:relative;isolation:isolate}
+.spot::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .3s;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(95,212,224,.14),transparent 70%)}
+.spot:hover::before{opacity:1}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;padding:1px;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(95,212,224,.55),transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.spot:hover::after{opacity:1}
+.shiny{background:linear-gradient(110deg,#8a9bb0 35%,#fff 50%,#8a9bb0 65%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3.2s linear infinite}
+@keyframes shine{from{background-position:130% 0}to{background-position:-30% 0}}
+.aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.55;mask-image:linear-gradient(#000 40%,transparent)}
+.aurora canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+@media (prefers-reduced-motion:reduce){.shiny{animation:none;color:#c8d3df;background:none}}
+.rays-beam{position:absolute;top:-30%;width:18%;height:160%;transform-origin:50% 0;transform:rotate(var(--r));filter:blur(22px);opacity:var(--o);
+  background:linear-gradient(180deg,rgba(95,212,224,.9),rgba(90,75,255,.35) 55%,transparent);animation:ray var(--d) ease-in-out infinite alternate}
+@keyframes ray{from{transform:rotate(var(--r)) scaleX(.7);opacity:calc(var(--o)*.5)}to{transform:rotate(calc(var(--r) + 9deg)) scaleX(1.25);opacity:var(--o)}}
+.marquee{mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee-track{animation:marq var(--speed,38s) linear infinite}
+@keyframes marq{to{transform:translateX(calc(-50% - .375rem))}}
+.kinetic-ch{display:inline-block;animation:kin 1.4s ease-in-out infinite}
+@keyframes kin{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(-5px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.rays-beam,.marquee-track,.kinetic-ch{animation:none}}

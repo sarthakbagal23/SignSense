@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+.vercel
+_archive
+public/mediapipe/hand_landmarker.task
+public/mediapipe/wasm/
