@@ -131,7 +131,7 @@ function Overlays() {
               <h1 id="start-title">Practice one handshape.</h1>
               <p id="start-description">Your camera tracks 21 points on your hand, right in your browser. Senso gives one cue when a shape needs a small adjustment.</p>
               <ol className="welcome-steps" aria-label="How practice works"><li><span>01</span>See the handshape</li><li><span>02</span>Follow one clear cue</li><li><span>03</span>Build your round</li></ol>
-              <div className="start-actions"><Button id="go-cam" variant="default" size="lg"><Camera size={17} aria-hidden="true" /> Start with camera</Button></div>
+              <div className="start-actions"><Button id="go-cam" variant="default" size="lg"><Camera size={17} aria-hidden="true" /> Start with camera</Button><Button id="go-demo" variant="outline" size="lg">Preview a guided round</Button></div>
               <Button id="go-family2" variant="ghost" size="sm" className="family-start">Start a family I-L-Y drill</Button>
               <div className="start-note" id="start-note" role="status">Learn mode and the handshape guide work without a camera.</div>
             </div>

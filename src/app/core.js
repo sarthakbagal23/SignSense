@@ -17,7 +17,7 @@ const el = Object.fromEntries([
   'stage', 'stage-placeholder', 'video', 'hud', 'fx', 'view3d', 'ghost', 'radar', 'glyph', 'desc', 'gauge', 'gaugev',
   'coach', 'coach-ico', 'coach-msg', 'reading', 'meters', 'word', 'pop', 'streak', 'modepill',
   'tol', 'tolv', 'custom', 'custom-start', 'custom-word', 'debug-output', 'dbgcard', 'start', 'start-note', 'help', 'b-offline', 'b-fps',
-  'b-track', 'ai-btn', 'ai-sum', 'ai-out', 'ai-name', 'ai-letter', 'family', 'go-family', 'go-family2', 'b-goal', 'c-why', 'c-simple', 'c-speak', 'coach-ai', 'diag', 'diag-title', 'diag-hint', 'retry-cam', 'pick-model-wrap', 'model-file', 'model-link', 'intro', 'intro-skip', 'intro-status', 'welcome-video', 'b-snd', 'b-cam', 'b-flip', 'b-dbg', 'b-help', 'go-cam', 'help-close'
+  'b-track', 'go-demo', 'ai-btn', 'ai-sum', 'ai-out', 'ai-name', 'ai-letter', 'family', 'go-family', 'go-family2', 'b-goal', 'c-why', 'c-simple', 'c-speak', 'coach-ai', 'diag', 'diag-title', 'diag-hint', 'retry-cam', 'pick-model-wrap', 'model-file', 'model-link', 'intro', 'intro-skip', 'intro-status', 'welcome-video', 'b-snd', 'b-cam', 'b-flip', 'b-dbg', 'b-help', 'go-cam', 'help-close'
 ].map((k) => [k, $(k)]));
 
 const WORDS = ['BOLD', 'CLOUD', 'SOLID', 'VISUAL', 'WILD', 'BASIC', 'DAILY', 'LOUD'];
@@ -398,7 +398,7 @@ document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('cli
   else if (b.dataset.mode === 'warmup') setWeakWarmup();
   else setWord(WORDS[S.wordIdx]);
 }));
-el['go-cam'].onclick = useCamera; el['b-cam'].onclick = useCamera;
+el['go-cam'].onclick = useCamera; el['b-cam'].onclick = useCamera; el['go-demo'].onclick = () => { useDemo(); toast('Guided round ready. Follow the target letter and coach cue.'); };
 el['b-flip'].onclick = () => { S.flip = !S.flip; S.frameState.basis = null; S.smooth.reset(); toast('Handedness flipped'); };
 const syncSound = () => { el['b-snd'].dataset.off = String(S.muted); el['b-snd'].title = S.muted ? 'Sound off (M)' : 'Sound on (M)'; el['b-snd'].setAttribute('aria-pressed', String(S.muted)); };
 if (EMBEDDED_DEMO) el['b-snd'].hidden = true;
@@ -407,7 +407,7 @@ el['b-snd'].onclick = () => { if (EMBEDDED_DEMO) return; S.muted = !S.muted; syn
 el['b-dbg'].onclick = () => { S.dbgOn = !S.dbgOn; el.dbgcard.hidden = !S.dbgOn; el['b-dbg'].classList.toggle('on', S.dbgOn); };
 el['b-help'].onclick = () => (el.help.hidden = false); el['help-close'].onclick = () => (el.help.hidden = true);
 el.tol.oninput = () => { S.tol = +el.tol.value; el.tolv.textContent = 'x' + S.tol.toFixed(2); };
-el.custom.addEventListener('keydown', (e) => { if (e.key === 'Enter') { startCustomWord(); el.custom.blur(); } e.stopPropagation(); });
+el.custom.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.nativeEvent?.isComposing && e.keyCode !== 229) { startCustomWord(); el.custom.blur(); } e.stopPropagation(); });
 addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') { do { S.idx = (S.idx + 1) % S.seq.length; } while (S.seq[S.idx].skip); applyTarget(); }
   else if (e.key === 'ArrowLeft') { do { S.idx = (S.idx - 1 + S.seq.length) % S.seq.length; } while (S.seq[S.idx].skip); applyTarget(); }

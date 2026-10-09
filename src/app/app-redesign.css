@@ -134,7 +134,7 @@
 .app-v2 .start-card h1,.app-v2 .start-card h2{margin:7px 0 0;color:var(--txt);font:500 clamp(30px,5vw,40px)/1.06 var(--display);letter-spacing:-.025em}
 .app-v2 .start-card>p:not(.panel-kicker){margin:15px 0 20px;color:#b5c2cc;font-size:14px;line-height:1.6}
 .app-v2 .start-actions{display:flex;gap:9px;justify-content:flex-start;flex-wrap:wrap;margin-top:18px}
-.app-v2 .start-actions .btn{min-height:46px;padding-inline:15px}
+.app-v2 .start-actions .btn{min-height:46px;padding-inline:15px}.app-v2 .start-actions .btn.outline{border-color:rgba(95,212,224,.34);background:transparent;color:var(--txt)}.app-v2 .start-actions .btn.outline:hover{border-color:var(--signal);background:rgba(95,212,224,.08)}
 .app-v2 .start-actions .btn.primary{background:var(--signal);color:#071719;border-color:var(--signal)}
 .app-v2 .family-start{margin-top:9px;color:var(--dim)}
 .app-v2 .start-note{min-height:0;margin:12px 0 0;color:var(--dim);font-size:11px;line-height:1.5}
