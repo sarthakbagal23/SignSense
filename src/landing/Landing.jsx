@@ -79,7 +79,7 @@ function Header({ inert = false }) {
         <a href="#practice">The practice</a>
         <a href="#promise">Our promise</a>
       </nav>
-      <Button as="a" href="app.html?welcome=1" variant="default" size="sm" className="story-nav-cta">Try a practice round <ArrowRight size={15} aria-hidden="true" /></Button>
+      <Button as="a" href="practice?welcome=1" variant="default" size="sm" className="story-nav-cta">Try a practice round <ArrowRight size={15} aria-hidden="true" /></Button>
     </header>
   );
 }
@@ -208,7 +208,7 @@ function PracticeDemo() {
     <Card ref={frame} spot={false} className="practice-demo-card">
       <div className="demo-window-bar"><div className="demo-window-brand"><img src="/mascot/wave-small.png" alt="" width="23" height="23" /><span>SignSense <i>/</i> Practice</span></div><span className="demo-live-state"><i aria-hidden="true" />{inView ? 'LIVE PREVIEW' : 'READY TO PREVIEW'}</span></div>
       <div className="practice-demo">
-        {inView && <iframe src="app.html?demo=1&nointro=1&muted=1" title="SignSense handshape practice demo" loading="eager" />}
+        {inView && <iframe src="practice?demo=1&nointro=1&muted=1" title="SignSense handshape practice demo" loading="eager" />}
       </div>
       <div className="demo-window-foot"><span><b>21</b> hand points tracked on your device</span><span>Click to explore <ArrowRight size={14} aria-hidden="true" /></span></div>
     </Card>
@@ -248,7 +248,7 @@ function Practice() {
           <li><span className="fact-index">02</span><span><b>Follow one cue</b><small>Adjust one thing, like thumb beside index.</small></span></li>
           <li><span className="fact-index">03</span><span><b>Keep going</b><small>Practice a letter, a name, or a tricky round.</small></span></li>
         </ul>
-        <Button as="a" href="app.html?welcome=1" variant="default" size="lg" className="story-primary">Try a practice round <ArrowRight size={18} aria-hidden="true" /></Button>
+        <Button as="a" href="practice?welcome=1" variant="default" size="lg" className="story-primary">Try a practice round <ArrowRight size={18} aria-hidden="true" /></Button>
         <p className="practice-privacy"><Shield size={15} aria-hidden="true" /> Camera tracking stays on this device.</p>
       </div>
       <div className="practice-preview-wrap"><p className="preview-overline"><span>01</span> LIVE PRODUCT PREVIEW <span className="preview-overline-rule" /></p><PracticeDemo /><p className="practice-demo-caption">Try the letter controls. The demo loads only while it’s on screen and stays muted.</p></div>
@@ -274,13 +274,13 @@ function PromiseSection() {
         {loop.map(([title, body], i) => <li key={title}><span className="loop-number">0{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div><Check size={17} aria-hidden="true" /></li>)}
       </ol>
       <div className="privacy-note"><Shield size={17} aria-hidden="true" /><p>Camera tracking stays in your browser. Optional AI notes send a hand crop only when you ask for them.</p></div>
-      <div className="promise-cta"><div><p className="story-kicker">Start with one letter</p><h2>Make room for one more conversation.</h2></div><Button as="a" href="app.html?welcome=1" variant="default" size="lg" className="story-primary">Start practicing <ArrowRight size={18} aria-hidden="true" /></Button></div>
+      <div className="promise-cta"><div><p className="story-kicker">Start with one letter</p><h2>Make room for one more conversation.</h2></div><Button as="a" href="practice?welcome=1" variant="default" size="lg" className="story-primary">Start practicing <ArrowRight size={18} aria-hidden="true" /></Button></div>
     </section>
   );
 }
 
 export default function Landing() {
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const prefersReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [intro, setIntro] = useState(!prefersReduced);
   const finishIntro = useCallback(() => setIntro(false), []);
 

@@ -9,7 +9,7 @@ const status = ['b-offline', 'b-track', 'b-fps'];
 function Header() {
   return (
     <header className="practice-header">
-      <a className="practice-brand" href="index.html" aria-label="SignSense home"><img src="/mascot/wave-small.png" alt="" width="30" height="30" /><span>SignSense</span></a>
+      <a className="practice-brand" href="/" aria-label="SignSense home"><img src="/mascot/wave-small.png" alt="" width="30" height="30" /><span>SignSense</span></a>
       <nav className="tabs" aria-label="Practice mode">
         <button data-mode="practice" className="on" aria-pressed="true">Learn letters</button>
         <button data-mode="spell" aria-pressed="false">Spell a word</button>

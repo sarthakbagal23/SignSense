@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "node scripts/fetch-assets.mjs && vite build",
-    "preview": "vite preview --host",
+    "dev": "next dev --turbopack",
+    "build": "node scripts/fetch-assets.mjs && next build",
+    "preview": "next start",
     "assets": "node scripts/fetch-assets.mjs",
     "selftest": "node scripts/selftest.mjs",
     "postinstall": "node scripts/fetch-assets.mjs --wasm-only"
@@ -19,6 +19,7 @@
     "gsap": "^3.15.0",
     "lucide-react": "^1.53.0",
     "motion": "^14.0.0",
+    "next": "^16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwind-merge": "^3.7.0"
