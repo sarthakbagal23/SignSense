@@ -4,16 +4,17 @@
 @import "./style.css" layer(components);
 
 @theme {
-  --color-canvas: #080d12;
-  --color-surface: #101820;
-  --color-surface2: #17232d;
-  --color-hair: #263642;
-  --color-hair2: #344653;
-  --color-ink: #e8eef5;
-  --color-mute: #c3cfdc;
-  --color-sub: #93a4b4;
-  --color-signal: #5fd4e0;
-  --color-violet: #a58bff;
+  --color-canvas: #f6f8f5;
+  --color-surface: #ffffff;
+  --color-surface2: #eaf3ef;
+  --color-hair: #dfe7e3;
+  --color-hair2: #bdcdc8;
+  --color-ink: #102326;
+  --color-mute: #607274;
+  --color-sub: #82918f;
+  --color-signal: #9de8dc;
+  --color-signal-ink: #0f625c;
+  --color-night: #0c1d20;
   --font-sans: "Inter Tight", system-ui, sans-serif;
   --font-display: "Newsreader", Georgia, serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
