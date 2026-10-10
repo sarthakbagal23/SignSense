@@ -62,7 +62,7 @@ export default function StarSky() {
   }, []);
   return (
     <div className="sky" aria-hidden="true">
-      <i className="sky-aurora a1" /><i className="sky-aurora a2" /><i className="sky-aurora a3" />
+      <i className="sky-photo" /><i className="sky-aurora a1" /><i className="sky-aurora a2" /><i className="sky-aurora a3" />
       <canvas ref={ref} />
     </div>
   );
