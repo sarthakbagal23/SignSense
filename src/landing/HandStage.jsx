@@ -11,7 +11,9 @@ const BONES = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 9], [9, 13], [13, 17]
   [5, 6], [6, 7], [7, 8], [9, 10], [10, 11], [11, 12], [13, 14], [14, 15], [15, 16], [17, 18], [18, 19], [19, 20]];
 const PALM = [0, 1, 5, 9, 13, 17];
 const TIPS = new Set([4, 8, 12, 16, 20]);
-const SIGNAL = [95, 212, 224], FROST = [232, 238, 245], AMBER = [240, 185, 90], LEAF = [143, 227, 136];
+const SIGNAL = [95, 212, 224], FROST = [226, 250, 252];
+const DUST_N = 170;
+const rnd = (i, k) => { const x = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return x - Math.floor(x); };
 const smooth = (k) => k * k * (3 - 2 * k);
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
@@ -45,6 +47,7 @@ export default function HandStage({ letters, mode = 'auto', progressRef, period 
     const n = letters.length;
     let w = 0, h = 0, dpr = 1, raf = 0, visible = true, t0 = performance.now();
     const aim = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
+    const dust = Array.from({ length: DUST_N }, (_, i) => ({ bone: Math.floor(rnd(i, 1) * BONES.length), u: rnd(i, 2), a: rnd(i, 3) * 6.283, d: 0.25 + rnd(i, 4) * 0.95, sp: 0.2 + rnd(i, 5) * 0.6, r: 0.6 + rnd(i, 6) * 1.5 }));
 
     const resize = () => {
       const r = box.getBoundingClientRect();
@@ -96,59 +99,85 @@ export default function HandStage({ letters, mode = 'auto', progressRef, period 
       const P = buildHand(lerpParams(poseParams(a), poseParams(b), e));
       cur.x += (aim.x - cur.x) * 0.06; cur.y += (aim.y - cur.y) * 0.06;
       const R = rotMat(-0.1 + cur.y * 0.22 + Math.sin(t * 0.6) * 0.04, -0.2 + cur.x * 0.36 + Math.sin(t * 0.45) * 0.06, -0.03 + Math.sin(t * 0.35) * 0.025);
-      const S = Math.min(w * 0.37, h * 0.3), cx = w * 0.5, cy = h * 0.47 + S * 0.95;
+      const S = Math.min(w * 0.44, h * 0.34), cx = w * 0.5, cy = h * 0.45 + S * 0.95;
       const pts = P.map((p) => {
         const q = applyMat(R, [p[0] - 0.02, p[1], p[2]]);
         const f = 1 / (1 - q[2] * 0.2);
         return { x: cx + q[0] * S * f, y: cy - q[1] * S * f, z: q[2], f };
       });
 
+      const unit = clamp(w / 520, 0.7, 1.4);
+      // The hand dissolves into stardust while it changes shape, then pulls itself back together.
+      const chaos = mode === 'scrub' || !settled ? 4 * e * (1 - e) : 0;
+      const calm = 1 - chaos * 0.75;
       ctx.clearRect(0, 0, w, h);
+
+      // Soft glow behind the palm
+      const gl = ctx.createRadialGradient(cx, cy - S * 0.55, 0, cx, cy - S * 0.55, S * 1.5);
+      gl.addColorStop(0, rgba(SIGNAL, 0.2 * calm)); gl.addColorStop(1, rgba(SIGNAL, 0));
+      ctx.fillStyle = gl; ctx.fillRect(0, 0, w, h);
+
       // Palm plate
       ctx.beginPath(); PALM.forEach((k, j) => (j ? ctx.lineTo(pts[k].x, pts[k].y) : ctx.moveTo(pts[k].x, pts[k].y))); ctx.closePath();
       const g = ctx.createLinearGradient(0, cy - S * 1.4, 0, cy);
-      g.addColorStop(0, rgba(SIGNAL, 0.02)); g.addColorStop(1, rgba(SIGNAL, 0.16));
+      g.addColorStop(0, rgba(SIGNAL, 0.02)); g.addColorStop(1, rgba(SIGNAL, 0.13 * calm));
       ctx.fillStyle = g; ctx.fill();
 
-      // Bones, back to front so near bones sit on top
-      const order = BONES.map((bn, i) => ({ bn, z: (pts[bn[0]].z + pts[bn[1]].z) / 2 })).sort((u, v) => u.z - v.z);
+      // Constellation lines, back to front
+      const order = BONES.map((bn) => ({ bn, z: (pts[bn[0]].z + pts[bn[1]].z) / 2 })).sort((u, v) => u.z - v.z);
       ctx.lineCap = 'round';
       for (const { bn, z } of order) {
         const near = clamp((z + 0.6) / 1.4, 0, 1);
-        const col = mix(SIGNAL, FROST, near * 0.55);
-        ctx.strokeStyle = rgba(col, 0.35 + near * 0.6);
-        ctx.lineWidth = (1.6 + near * 2.2) * clamp(w / 520, 0.7, 1.4);
-        ctx.shadowColor = rgba(SIGNAL, 0.55); ctx.shadowBlur = 10 + near * 12;
+        ctx.strokeStyle = rgba(mix(SIGNAL, FROST, near * 0.6), (0.2 + near * 0.4) * calm);
+        ctx.lineWidth = (1 + near * 1.2) * unit;
+        ctx.shadowColor = rgba(SIGNAL, 0.6); ctx.shadowBlur = 8 * calm;
         ctx.beginPath(); ctx.moveTo(pts[bn[0]].x, pts[bn[0]].y); ctx.lineTo(pts[bn[1]].x, pts[bn[1]].y); ctx.stroke();
       }
       ctx.shadowBlur = 0;
 
-      // Joints
-      const unit = clamp(w / 520, 0.7, 1.4);
+      // Stardust: every grain has a home on the hand; chaos lifts it away and swirls it.
+      for (let i = 0; i < DUST_N; i++) {
+        const d = dust[i], A = pts[BONES[d.bone][0]], B = pts[BONES[d.bone][1]];
+        const hx = A.x + (B.x - A.x) * d.u, hy = A.y + (B.y - A.y) * d.u;
+        const ang = d.a + t * d.sp, rad = (6 + d.d * 70 * (0.25 + chaos * 1.6)) * unit;
+        const x = hx + Math.cos(ang) * rad * (0.3 + chaos), y = hy + Math.sin(ang * 0.9) * rad * (0.3 + chaos) - chaos * 26 * d.d * unit;
+        const tw = 0.5 + 0.5 * Math.sin(t * 2 + i);
+        ctx.fillStyle = rgba(i % 5 === 0 ? FROST : SIGNAL, (0.35 + 0.55 * tw) * (0.55 + chaos * 0.45));
+        ctx.beginPath(); ctx.arc(x, y, d.r * unit * (0.7 + tw * 0.5), 0, 7); ctx.fill();
+      }
+
+      // Joints as stars; fingertips get a four-point sparkle
       pts.forEach((p, k) => {
         const near = clamp((p.z + 0.6) / 1.4, 0, 1);
-        const r = (TIPS.has(k) ? 5.2 : 3.2) * (0.8 + near * 0.5) * unit;
-        ctx.fillStyle = k === 0 ? rgba(FROST, 0.95) : rgba(mix(SIGNAL, FROST, 0.3 + near * 0.6), 0.95);
+        const tip = TIPS.has(k);
+        const r = (tip ? 4.4 : 2.6) * (0.8 + near * 0.5) * unit;
+        ctx.shadowColor = rgba(SIGNAL, 0.9); ctx.shadowBlur = (tip ? 18 : 9) * calm;
+        ctx.fillStyle = rgba(mix(SIGNAL, FROST, 0.45 + near * 0.55), 0.55 + 0.45 * calm);
         ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fill();
+        if (tip && calm > 0.5) {
+          ctx.shadowBlur = 0; ctx.strokeStyle = rgba(FROST, 0.55 * calm); ctx.lineWidth = 1;
+          const L = r * 3.4 * (0.85 + 0.15 * Math.sin(t * 3 + k));
+          ctx.beginPath(); ctx.moveTo(p.x - L, p.y); ctx.lineTo(p.x + L, p.y); ctx.moveTo(p.x, p.y - L); ctx.lineTo(p.x, p.y + L); ctx.stroke();
+        }
       });
+      ctx.shadowBlur = 0;
 
-      // The coaching marker: amber while the shape is still moving into place, leaf green once it matches.
+      // The coaching marker: a breathing ring around the landmark the cue is about.
       const fp = pts[cue.focus] || pts[8];
-      const col = settled ? LEAF : AMBER;
+      const col = settled ? FROST : SIGNAL;
       const pulse = reduce ? 0.5 : (Math.sin(t * 5) + 1) / 2;
-      ctx.strokeStyle = rgba(col, 0.95); ctx.lineWidth = 2 * unit;
-      ctx.setLineDash(settled ? [] : [5 * unit, 5 * unit]);
-      ctx.beginPath(); ctx.arc(fp.x, fp.y, (13 + (settled ? 0 : pulse * 4)) * unit, 0, 7); ctx.stroke();
+      ctx.strokeStyle = rgba(col, 0.95); ctx.lineWidth = 1.6 * unit;
+      ctx.setLineDash(settled ? [] : [4 * unit, 5 * unit]);
+      ctx.beginPath(); ctx.arc(fp.x, fp.y, (14 + (settled ? 0 : pulse * 5)) * unit, 0, 7); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = rgba(col, 1); ctx.beginPath(); ctx.arc(fp.x, fp.y, 4.2 * unit, 0, 7); ctx.fill();
 
-      // The cue chip stays put (so it never covers the hand); a thin leader line ties it to the landmark it is about.
+      // The cue chip stays put; a thin leader line ties it to the landmark.
       const cEl = chip.current;
       if (cEl) {
         const ax = cEl.offsetLeft + Math.min(36, cEl.offsetWidth / 2), ay = cEl.offsetTop;
-        ctx.strokeStyle = rgba(col, 0.55); ctx.lineWidth = 1.25;
-        ctx.setLineDash([3, 4]);
-        ctx.beginPath(); ctx.moveTo(fp.x, fp.y + 13 * unit); ctx.lineTo(ax, ay); ctx.stroke();
+        ctx.strokeStyle = rgba(col, 0.4); ctx.lineWidth = 1;
+        ctx.setLineDash([2, 5]);
+        ctx.beginPath(); ctx.moveTo(fp.x, fp.y + 14 * unit); ctx.lineTo(ax, ay); ctx.stroke();
         ctx.setLineDash([]);
       }
       void target;
@@ -161,7 +190,7 @@ export default function HandStage({ letters, mode = 'auto', progressRef, period 
   return (
     <div ref={wrap} className={`hand-stage ${className}`}>
       <div className="hand-stage-rings" aria-hidden="true"><i /><i /><i /></div>
-      <canvas ref={canvas} role="img" aria-label={`Hand tracking skeleton forming the letter ${view.letter}`} />
+      <canvas ref={canvas} role="img" aria-label={`Hand made of stars forming the letter ${view.letter}`} />
       <div ref={chip} className={`hand-chip ${view.settled ? 'is-ok' : 'is-fix'}`} aria-live="polite">
         <span className="hand-chip-dot" aria-hidden="true" />
         <span className="hand-chip-text">{view.settled ? `That's ${view.letter}. Hold it.` : cue.text}</span>

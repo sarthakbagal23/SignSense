@@ -35,3 +35,8 @@ html[data-embed] .practice-header,html[data-embed] .privacy-tag{display:none}
 html[data-embed] #app.app-v2{gap:12px;padding-top:12px}
 
 @media(prefers-reduced-motion:reduce){.placeholder-ring,.app-v2 .stage-actions #b-cam{animation:none!important}}
+
+/* One colour: the app speaks only in signal teal + white */
+:root{--ok:#a8ecf2;--warn:#ffffff;--violet:#a8ecf2;--mag:#5fd4e0;--font-mono:"Inter Tight",system-ui,sans-serif}
+.coach-panel[data-kind=ok]{border-color:rgba(168,236,242,.7)!important;box-shadow:0 0 36px -10px rgba(95,212,224,.5)!important}
+.coach-panel[data-kind=fix]{border-color:rgba(255,255,255,.55)!important;box-shadow:0 0 36px -12px rgba(255,255,255,.25)!important}

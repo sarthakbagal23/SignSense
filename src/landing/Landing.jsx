@@ -16,7 +16,10 @@ import Magnet from '@/components/fx/rb/Magnet.jsx';
 import ShinyText from '@/components/fx/rb/ShinyText.jsx';
 import LightRays from '@/components/fx/rb/LightRays.jsx';
 import { ScrollVelocity } from '@/components/fx/rb/ScrollVelocity.jsx';
+import StarSky from './StarSky.jsx';
+import Senso from './Senso.jsx';
 import './landing-v3.css';
+import './landing-v4.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -77,6 +80,7 @@ function Hero({ reduced }) {
     <section className="hero3" aria-labelledby="hero-title">
       {!reduced && <div className="hero3-rays" aria-hidden="true"><LightRays raysOrigin="top-center" raysColor="#5fd4e0" raysSpeed={0.7} lightSpread={0.85} rayLength={1.5} followMouse mouseInfluence={0.05} noiseAmount={0.07} fadeDistance={1.05} saturation={0.9} /></div>}
       <div className="hero3-copy">
+        <p className="hero3-eyebrow"><i aria-hidden="true" />A practice room for your family</p>
         <div role="heading" aria-level={1} id="hero-title" className="hero3-title" aria-label="Dinner is loud. You have a story.">
           <MotionConfig reducedMotion="user">
             <span aria-hidden="true"><BlurText text="Dinner is loud." delay={110} animateBy="words" direction="bottom" className="hero3-line" /></span>
@@ -93,6 +97,7 @@ function Hero({ reduced }) {
       </div>
       <div className="hero3-stage">
         <HandStage letters={HERO_LETTERS} mode="auto" onLetter={onLetter} />
+        <Senso pose="wave" size={118} className="hero3-senso" />
         <div key={glyph.letter} className="hero3-glyph" aria-hidden="true">{glyph.letter}</div>
         <ol className="hero3-drill" aria-label="Today’s family drill: I, L, Y">
           {HERO_LETTERS.map((l) => <li key={l} className={l === glyph.letter ? 'is-on' : ''}>{l}</li>)}
@@ -172,6 +177,27 @@ function Story() {
   );
 }
 
+const POEM = ['Every hand', 'is a small', 'constellation.', 'Every letter,', 'a star', 'worth learning', 'to find.'];
+
+function Poem() {
+  const root = useRef(null);
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const words = root.current.querySelectorAll('.poem-line');
+      gsap.set(words, { autoAlpha: 0.08, y: 24, filter: 'blur(10px)' });
+      gsap.to(words, { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.5, ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top 60%', end: 'bottom 70%', scrub: 0.8 } });
+    });
+    return () => media.revert();
+  }, { scope: root });
+  return (
+    <section ref={root} className="poem" aria-label="Every hand is a small constellation. Every letter, a star worth learning to find.">
+      <p aria-hidden="true">{POEM.map((l, i) => <span key={i} className={`poem-line${i % 3 === 2 ? ' is-em' : ''}`}>{l}</span>)}</p>
+    </section>
+  );
+}
+
 function PracticeDemo() {
   const frame = useRef(null);
   const [inView, setInView] = useState(false);
@@ -229,6 +255,7 @@ function Practice() {
   return (
     <section ref={root} id="practice" className="practice-section" aria-labelledby="practice-title">
       <header className="practice-intro">
+        <Senso pose="pointing" size={132} className="practice-senso" />
         <div><p className="story-kicker"><span className="story-step">The practice</span>Small steps. Real connection.</p><h2 id="practice-title">See one shape. Fix one thing.</h2></div>
         <p className="practice-lede">One letter at a time. SignSense follows the handshape in front of you and offers one useful adjustment, then lets you try again.</p>
       </header>
@@ -264,7 +291,7 @@ function PromiseSection() {
         {loop.map(([title, body], i) => <li key={title}><span className="loop-number">0{i + 1}</span><div><h3>{title}</h3><p>{body}</p></div><Check size={17} aria-hidden="true" /></li>)}
       </ol>
       <div className="privacy-note"><Shield size={17} aria-hidden="true" /><p>Camera tracking stays in your browser. Optional AI notes send a hand crop only when you ask for them.</p></div>
-      <div className="promise-cta"><div><p className="story-kicker">Start with one letter</p><h2>Make room for one more conversation.</h2></div><Button as={Link} href="/practice?welcome=1" variant="default" size="lg" className="story-primary">Start practicing <ArrowRight size={18} aria-hidden="true" /></Button></div>
+      <div className="promise-cta"><Senso pose="excited" size={170} className="cta-senso" /><div><p className="story-kicker">Start with one letter</p><h2>Make room for one more conversation.</h2></div><Button as={Link} href="/practice?welcome=1" variant="default" size="lg" className="story-primary">Start practicing <ArrowRight size={18} aria-hidden="true" /></Button></div>
     </section>
   );
 }
@@ -281,12 +308,14 @@ export default function Landing() {
   useEffect(() => spotlight(), []);
   return (
     <div id="top" className="landing-shell">
+      <StarSky />
       <a className="landing-skip" href="#main-content">Skip to content</a>
       <Header />
       <main id="main-content">
         <Hero reduced={prefersReduced} />
         <CueRibbon />
         <Story />
+        <Poem />
         <Practice />
         <PromiseSection />
       </main>
